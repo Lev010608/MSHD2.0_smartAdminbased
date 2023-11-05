@@ -76,6 +76,4 @@ public class EmployeeEntity {
     private LocalDateTime updateTime;
 
     private LocalDateTime createTime;
-
-
 }

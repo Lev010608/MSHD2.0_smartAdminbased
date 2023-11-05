@@ -34,6 +34,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String SYSTEM_EMPLOYEE = "系统-员工管理";
 
+        public static final String SYSTEM_SUPPORT_DISASTER = "系统-生命线工程";
+
         public static final String SYSTEM_DEPARTMENT = "系统-部门管理";
 
         public static final String SYSTEM_MENU = "系统-菜单";

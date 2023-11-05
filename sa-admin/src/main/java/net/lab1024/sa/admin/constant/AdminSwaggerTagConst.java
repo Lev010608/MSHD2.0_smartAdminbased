@@ -36,6 +36,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String SYSTEM_SUPPORT_DISASTER = "系统-生命线工程";
 
+        public static final String SYSTEM_SECONDARY_DISASTER = "系统-次生灾害";
+
         public static final String SYSTEM_DEPARTMENT = "系统-部门管理";
 
         public static final String SYSTEM_MENU = "系统-菜单";
@@ -51,6 +53,7 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
         public static final String SYSTEM_ROLE_MENU = "系统-角色-菜单";
 
         public static final String SYSTEM_DATA_TRACER = "系统-";
+
     }
 
 

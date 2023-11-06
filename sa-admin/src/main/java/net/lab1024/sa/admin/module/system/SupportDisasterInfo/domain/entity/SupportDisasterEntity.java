@@ -43,7 +43,7 @@ public class SupportDisasterEntity {
     /**
      * 受灾程度
      */
-    private Integer Extent;
+    private String Extent;
 
     /**
      * 描述

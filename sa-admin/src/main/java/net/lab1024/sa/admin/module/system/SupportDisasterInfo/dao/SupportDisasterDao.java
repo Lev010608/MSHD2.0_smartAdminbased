@@ -43,7 +43,7 @@ public interface SupportDisasterDao extends BaseMapper<SupportDisasterEntity> {
      * @param location
      * @return
      */
-    SupportDisasterEntity getByLocation(@Param("location") String location);
+    SupportDisasterEntity getByLocation(@Param("Location") String location);
 
 
     /**

@@ -47,4 +47,7 @@ public class SecondaryDisasterVO {
 
     @ApiModelProperty("数据载体")
     private String Carrier;
+
+    @ApiModelProperty("是否删除0否 1是")
+    private Boolean deletedFlag;
 }

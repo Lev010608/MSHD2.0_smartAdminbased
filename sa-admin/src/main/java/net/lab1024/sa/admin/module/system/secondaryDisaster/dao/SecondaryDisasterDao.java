@@ -52,7 +52,7 @@ public interface SecondaryDisasterDao extends BaseMapper<SecondaryDisasterEntity
      * @param location
      * @return
      */
-    SecondaryDisasterEntity getByLocation(@Param("location") String location);
+    SecondaryDisasterEntity getByLocation(@Param("Location") String location);
 
 
     /**

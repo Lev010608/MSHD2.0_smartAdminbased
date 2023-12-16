@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.SupportDisasterInfo.domain.form;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.lab1024.sa.common.common.enumeration.CarrierEnum;
 import net.lab1024.sa.common.common.enumeration.SupportExtentEnum;
 import net.lab1024.sa.common.common.enumeration.SupportLabelEnum;
 import net.lab1024.sa.common.common.util.SmartVerificationUtil;
@@ -65,6 +66,6 @@ public class SupportDisasterAddForm {
 
     @ApiModelProperty("数据载体")
     @NotNull(message = "数据载体不能为空")
-    @Length(max = 50, message = "数据载体最大长度为50")
+    @CheckEnum(value = CarrierEnum.class, message = "数据载体错误")
     private String Carrier;
 }

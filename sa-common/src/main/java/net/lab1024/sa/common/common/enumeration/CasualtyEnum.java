@@ -7,9 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CasualtyEnum implements BaseEnum{
-    /**
-     *
-     */
+
     DEATH(CasualtyNameConst.DEATH,"死亡"),
     INJURING(CasualtyNameConst.INJURING,"受伤"),
     MISSING(CasualtyNameConst.MISSING,"失踪");
@@ -19,9 +17,9 @@ public enum CasualtyEnum implements BaseEnum{
     private final String desc;
 
     public static final class CasualtyNameConst {
-        public static final String DEATH = "death";
-        public static final String INJURING = "injuring";
-        public static final String MISSING = "missing";
+        public static final String DEATH = "死亡";
+        public static final String INJURING = "受伤";
+        public static final String MISSING = "失踪";
 
     }
 }

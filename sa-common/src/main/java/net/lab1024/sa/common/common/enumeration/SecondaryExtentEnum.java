@@ -46,11 +46,11 @@ public enum SecondaryExtentEnum implements BaseEnum{
     private final String desc;
 
     public static final class SystemEnvironmentNameConst {
-        public static final String WELL = "well";
-        public static final String SLIGHTLY = "slightly";
-        public static final String MEDIUM = "medium";
-        public static final String HEAVY = "heavy";
+        public static final String WELL = "基本完好";
+        public static final String SLIGHTLY = "轻微破坏";
+        public static final String MEDIUM = "中等破坏";
+        public static final String HEAVY = "严重破坏";
 
-        public static final String RUIN = "ruin";
+        public static final String RUIN = "毁坏";
     }
 }

@@ -47,12 +47,12 @@ public enum SupportLabelEnum implements BaseEnum {
     private final String desc;
 
     public static final class SystemEnvironmentNameConst {
-        public static final String TRANS = "trans";
-        public static final String WATER = "water";
-        public static final String OIL = "oil";
-        public static final String GAS = "gas";
-        public static final String ELECTRICITY = "electricity";
-        public static final String COMMUNICATION = "communication";
-        public static final String HYDRAULIC = "hydraulic";
+        public static final String TRANS = "交通";
+        public static final String WATER = "供水";
+        public static final String OIL = "输油";
+        public static final String GAS = "燃气";
+        public static final String ELECTRICITY = "电力";
+        public static final String COMMUNICATION = "通信";
+        public static final String HYDRAULIC = "水利";
     }
 }

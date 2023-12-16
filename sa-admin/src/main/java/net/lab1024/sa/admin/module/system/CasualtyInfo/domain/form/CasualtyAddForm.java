@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.CasualtyInfo.domain.form;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.Data;
+import net.lab1024.sa.common.common.enumeration.CarrierEnum;
 import net.lab1024.sa.common.common.enumeration.CasualtyEnum;
 import net.lab1024.sa.common.common.validator.enumeration.CheckEnum;
 import org.hibernate.validator.constraints.Length;
@@ -41,8 +42,8 @@ public class CasualtyAddForm {
     @Length(max = 50,message = "数据来源的范围最大为50")
     private String Origin;
 
-    @ApiModelProperty("载体形式")
-    @NotNull(message = "载体形式不能为空")
-    @Length(max = 50,message = "载体形式的范围最大为50")
+    @ApiModelProperty("载体")
+    @NotNull(message = "载体不能为空")
+    @CheckEnum(value = CarrierEnum.class, message = "受灾程度错误")
     private String Carrier;
 }

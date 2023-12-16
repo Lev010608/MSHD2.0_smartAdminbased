@@ -4,7 +4,7 @@
 
     <select id="querySupportDisaster" resultType="net.lab1024.sa.admin.module.system.SupportDisasterInfo.domain.vo.SupportDisasterVO">
         SELECT
-        t_support_disaster.*,
+        t_support_disaster.*
         FROM t_support_disaster
         <where>
             <if test="queryForm.keyword != null and queryForm.keyword != ''">

@@ -1,9 +1,9 @@
 spring:
   # 数据库连接信息
   datasource:
-    url: jdbc:p6spy:mysql://10.129.166.43:3306/smart_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: mysql0528
+    url: jdbc:p6spy:mysql://10.129.142.131:3306/smart_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: other
+    password: passwd
     initial-size: 2
     min-idle: 2
     max-active: 10
@@ -28,7 +28,7 @@ spring:
   # redis 连接池配置信息
   redis:
     database: 1
-    host: 10.129.166.43
+    host: 127.0.0.1
     lettuce:
       pool:
         max-active: 5

@@ -1,50 +1,38 @@
 package net.lab1024.sa.admin.module.system.earthquake.manager;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.earthquake.dao.EarthquakeDao;
 import net.lab1024.sa.admin.module.system.earthquake.domain.entity.EarthquakeEntity;
-import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
-import net.lab1024.sa.admin.module.system.role.domain.entity.RoleEmployeeEntity;
-import net.lab1024.sa.admin.module.system.role.manager.RoleEmployeeManager;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class EarthquakeManager {
+@Service
+public class EarthquakeManager extends ServiceImpl<EarthquakeDao, EarthquakeEntity> {
     @Autowired
     private EarthquakeDao earthquakeDao;
 
-    @Autowired
-    private RoleEmployeeManager roleEmployeeManager;
 
     /**
-     * 保存员工
+     * 保存震情信息
      *
-     * @param employee
+     * @param earthquake
      */
     @Transactional(rollbackFor = Throwable.class)
-    public void saveEmployee(EmployeeEntity employee, List<Long> roleIdList) {
-        // 保存员工 获得id
-        employeeDao.insert(employee);
-
-        if (CollectionUtils.isNotEmpty(roleIdList)) {
-            List<RoleEmployeeEntity> roleEmployeeList = roleIdList.stream().map(e -> new RoleEmployeeEntity(e, employee.getEmployeeId())).collect(Collectors.toList());
-            roleEmployeeManager.saveBatch(roleEmployeeList);
-        }
+    public void saveEarthquake(EarthquakeEntity earthquake) {
+        // 保存震情信息
+        earthquakeDao.insert(earthquake);
     }
 
     /**
-     * 更新员工
+     * 更新震情信息
      *
-     * @param employee
+     * @param earthquake
      */
     @Transactional(rollbackFor = Throwable.class)
     public void updateEarthquake(EarthquakeEntity earthquake) {
-        // 保存员工 获得id
-        employeeDao.updateById(employee);
-
+        // 保存震情信息
+        earthquakeDao.updateById(earthquake);
     }
 
 }

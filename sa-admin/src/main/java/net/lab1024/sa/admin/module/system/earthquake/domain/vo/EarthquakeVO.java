@@ -39,4 +39,7 @@ public class EarthquakeVO {
 
     @ApiModelProperty("灾情指标")
     String index;
+
+    @ApiModelProperty("备注")
+    String remark;
 }

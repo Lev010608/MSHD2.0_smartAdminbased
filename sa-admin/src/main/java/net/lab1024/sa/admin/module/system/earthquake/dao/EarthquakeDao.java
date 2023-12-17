@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.system.earthquake.domain.entity.EarthquakeEntity;
 import net.lab1024.sa.admin.module.system.earthquake.domain.form.EarthquakeQueryForm;
 import net.lab1024.sa.admin.module.system.earthquake.domain.vo.EarthquakeVO;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
 
+@Mapper
+@Component
 public interface EarthquakeDao extends BaseMapper<EarthquakeEntity> {
     /**
      * 查询震情列表
@@ -34,6 +38,14 @@ public interface EarthquakeDao extends BaseMapper<EarthquakeEntity> {
      */
     String getByGeoCode(@Param("geoCode") String geoCode);
 
+    /**
+     * 通过震情码查询
+     *
+     * @param code
+     * @return
+     */
+    EarthquakeEntity getByCode(@Param("code") String code);
+
 
     /**
      * 获取所有震情信息
@@ -48,7 +60,7 @@ public interface EarthquakeDao extends BaseMapper<EarthquakeEntity> {
      * @param codes
      * @return
      */
-    List<EarthquakeVO> getEarthquakeByCode(@Param("codes") Collection<String> codes);
+    List<EarthquakeVO> getEarthquakeByCodes(@Param("codes") Collection<String> codes);
 
     /**
      * 查询单个震情信息

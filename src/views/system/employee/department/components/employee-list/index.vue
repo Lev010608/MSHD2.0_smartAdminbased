@@ -133,40 +133,65 @@
   //字段
   const columns = ref([
     {
-      title: '姓名',
-      dataIndex: 'actualName',
+      title: '统一编码',
+      dataIndex: 'id',
       width: 85,
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
+      title: '发生地点',
+      dataIndex: 'location',
       width: 80,
     },
     {
-      title: '性别',
-      dataIndex: 'gender',
+      title: '时间',
+      dataIndex: 'time',
       width: 40,
     },
     {
-      title: '登录账号',
-      dataIndex: 'loginName',
+      title: '受灾范围',
+      dataIndex: 'severely_damaged',
       width: 100,
     },
     {
-      title: '状态',
-      dataIndex: 'disabledFlag',
+      title: '受灾程度',
+      dataIndex: 'extent',
       width: 60,
     },
     {
-      title: '角色',
-      dataIndex: 'roleNameList',
+      title: '载体',
+      dataIndex: 'description',
       width: 100,
     },
     {
-      title: '部门',
-      dataIndex: 'departmentName',
+      title: '灾情',
+      dataIndex: 'label',
       ellipsis: true,
       width: 200,
+    },
+    {
+      title: '灾情子类',
+      dataIndex: 'type',
+      width: 120,
+    },
+    {
+      title: '灾情子类',
+      dataIndex: 'number',
+      width: 120,
+    },
+    {
+      title: '灾情子类',
+      dataIndex: 'origin',
+      width: 120,
+    },
+    {
+      title: '灾情子类',
+      dataIndex: 'carrier',
+      width: 120,
+    },
+    {
+      title: '灾情子类',
+      dataIndex: 'remark',
+      width: 120,
     },
     {
       title: '操作',

@@ -93,5 +93,5 @@ public interface SupportDisasterDao extends BaseMapper<SupportDisasterEntity> {
      * @param leaveFlag
      * @return
      */
-    List<String> getSupportDisasterId(@Param("leaveFlag") Boolean leaveFlag);
+
 }

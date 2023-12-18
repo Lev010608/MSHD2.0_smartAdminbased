@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.earthquake.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import net.lab1024.sa.admin.module.system.dataImport.excel.ExcelImport;
 import net.lab1024.sa.admin.module.system.earthquake.dao.EarthquakeDao;
 import net.lab1024.sa.admin.module.system.earthquake.domain.entity.EarthquakeEntity;
 import net.lab1024.sa.admin.module.system.earthquake.domain.form.EarthquakeAddForm;
@@ -18,10 +19,17 @@ import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,7 +76,32 @@ public class EarthquakeService {
         PageResult<EarthquakeVO> PageResult = SmartPageUtil.convert2PageResult(pageParam, earthquakeList);
         return ResponseDTO.ok(PageResult);
     }
+    /**
+     * 批量新增震情
+     */
+    public synchronized ResponseDTO<String> batchAddEarthquake(String fileName,String sheetName) throws JSONException, IOException {
+        Path path = Paths.get(fileName);
+        if (Files.exists(path)) {
+            System.out.println("File exists!");
+        } else {
+            System.out.println("File does not exist!");
+        }
+        ExcelImport excelImport = null;
+        JSONObject check = excelImport.readUsersExcel("C:\\Users\\Note\\Desktop\\test.xlsx","sheet1");
 
+        // 获取 "sheet1" 对应的 JSONArray
+        JSONArray sheet1Array = check.getJSONArray("sheet1");
+
+        // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
+        for (int i = 0; i < sheet1Array.length(); i++) {
+            JSONObject item = sheet1Array.getJSONObject(i);
+            String code = item.getString("code");
+            EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
+            earthquakeAddForm.setCode(code);
+            addEarthquake(earthquakeAddForm);
+        }
+        return ResponseDTO.ok();
+    }
     /**
      * 新增震情
      *

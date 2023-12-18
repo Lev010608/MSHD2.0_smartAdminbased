@@ -29,7 +29,7 @@
     </select>
 
     <select id="getByGeoCode" resultType="java.lang.String">
-        SELECT *
+        SELECT CONCAT(province,city,county,town,village) as geoPosition
         FROM region_code
         <where>
             id = #{geoCode}

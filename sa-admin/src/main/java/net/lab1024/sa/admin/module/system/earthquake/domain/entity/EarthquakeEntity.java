@@ -51,7 +51,7 @@ public class EarthquakeEntity {
     /**
      * 灾情指标
      */
-    private String index;
+    private String degree;
 
     /**
      * 是否删除0否 1是

@@ -15,7 +15,7 @@
                 )
             </if>
             <if test="queryForm.deletedFlag != null">
-                AND t_support_disaster.deleted_flag = #{queryForm.deletedFlag}
+                AND t_earthquake.deleted_flag = #{queryForm.deletedFlag}
             </if>
         </where>
     </select>

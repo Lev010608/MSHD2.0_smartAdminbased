@@ -28,6 +28,9 @@ public class EarthquakeVO {
     @ApiModelProperty("数据来源")
     String source;
 
+    @ApiModelProperty("数据来源子类")
+    String subsource;
+
     @ApiModelPropertyEnum(CarrierEnum.class)
     String carrier;
 
@@ -38,7 +41,7 @@ public class EarthquakeVO {
     String subdisaster;
 
     @ApiModelProperty("灾情指标")
-    String index;
+    String degree;
 
     @ApiModelProperty("备注")
     String remark;

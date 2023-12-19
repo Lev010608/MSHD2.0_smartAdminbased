@@ -66,6 +66,7 @@ public class EarthquakeService {
         Page pageParam = SmartPageUtil.convert2PageQuery(earthquakeQueryForm);
 
         List<EarthquakeVO> earthquakeList = earthquakeDao.queryEarthquake(pageParam, earthquakeQueryForm);
+        System.out.println(earthquakeList);
         if (CollectionUtils.isEmpty(earthquakeList)) {
             PageResult<EarthquakeVO> PageResult = SmartPageUtil.convert2PageResult(pageParam, earthquakeList);
             return ResponseDTO.ok(PageResult);
@@ -109,74 +110,91 @@ public class EarthquakeService {
      * @return
      */
     public synchronized ResponseDTO<String> addEarthquake(EarthquakeAddForm earthquakeAddForm) {
-        String code = earthquakeAddForm.getCode();
-        String geoCode = code.substring(0, 12);
-        String time = code.substring(12, 26);
-        String sourceCode = code.substring(26, 27);
-        String subsourceCode = code.substring(27, 29);
-        String carrierCode = code.substring(29, 30);
-        String disasterCode = code.substring(30, 31);
-        String subdisasterCode = code.substring(31, 33);
-        String indexCode = code.substring(33, 36);
-
-        //解码地址信息
-        String location = earthquakeDao.getByGeoCode(geoCode);
-
-        //解码时间信息
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        try {
-            // 将字符串解析为日期时间对象
-            java.util.Date date = inputFormat.parse(time);
-            // 将日期时间对象格式化为指定格式的字符串
-            String output = outputFormat.format(date);
-            earthquakeAddForm.setTime(output);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //解码剩下的灾情信息
-        try {
-            File file1 = new File("src/main/java/net/lab1024/sa/admin/module/system/earthquake/decoder.json");
-            File file2 = new File("src/main/java/net/lab1024/sa/admin/module/system/earthquake/subdecoder.json");
-            Map<String, Map<String, String>> mappingData = objectMapper.readValue(file1, Map.class);
-            Map<String, Map<String, Map<String, String>>> mappingSubData = objectMapper.readValue(file2, Map.class);
-
-            String source = mappingData.get("sourceMap").get(sourceCode);
-            earthquakeAddForm.setSource(source);
-
-            String subsource = mappingSubData.get("subsourceMap").get(sourceCode).get(subsourceCode);
-            earthquakeAddForm.setSubSource(subsource);
-
-            String carrier = mappingData.get("carrierMap").get(carrierCode);
-            earthquakeAddForm.setCarrier(carrier);
-
-            String disaster = mappingData.get("disasterMap").get(disasterCode);
-            earthquakeAddForm.setDisaster(disaster);
-
-            String subdisaster = mappingSubData.get("subdisasterMap").get(disasterCode).get(subdisasterCode);
-            earthquakeAddForm.setSubDisaster(subdisaster);
-
-            String index = mappingSubData.get("indexMap").get(indexCode.substring(0, 1)).get(indexCode.substring(1, 4));
-            earthquakeAddForm.setIndex(index);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // 校验名称是否重复
         EarthquakeEntity earthquakeEntity = earthquakeDao.getByCode(earthquakeAddForm.getCode());
-        if (null != earthquakeEntity) {
-            return ResponseDTO.userErrorParam("震情码重复");
+        if (null != earthquakeEntity){
+            if (!earthquakeEntity.getDeletedFlag()) {
+                return ResponseDTO.userErrorParam("震情码重复");
+           }
+            else{
+                EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);
+
+                System.out.println(entity);
+                // 保存数据
+                entity.setDeletedFlag(Boolean.FALSE);
+                earthquakeManager.updateById(entity);
+            }
         }
+        else {
+            String code = earthquakeAddForm.getCode();
+            String geoCode = code.substring(0, 12);
+            String time = code.substring(12, 26);
+            String sourceCode = code.substring(26, 27);
+            String subsourceCode = code.substring(27, 29);
+            String carrierCode = code.substring(29, 30);
+            String disasterCode = code.substring(30, 31);
+            String subdisasterCode = code.substring(31, 33);
+            String degreeCode = code.substring(33, 36);
 
-        EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);
+            //解码地址信息
+            String location = earthquakeDao.getByGeoCode(geoCode);
+            earthquakeAddForm.setLocation(location);
+            System.out.println(location);
 
-        // 保存数据
-        entity.setDeletedFlag(Boolean.FALSE);
-        earthquakeManager.saveEarthquake(entity);
+            //解码时间信息
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+            try {
+                // 将字符串解析为日期时间对象
+                java.util.Date date = inputFormat.parse(time);
+                // 将日期时间对象格式化为指定格式的字符串
+                String output = outputFormat.format(date);
+                earthquakeAddForm.setDatetime(output);
+                System.out.println(output);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //解码剩下的灾情信息
+            try {
+                File file1 = new File("sa-admin/src/main/java/net/lab1024/sa/admin/module/system/earthquake/decoder.json");
+                File file2 = new File("sa-admin/src/main/java/net/lab1024/sa/admin/module/system/earthquake/subdecoder.json");
+                Map<String, Map<String, String>> mappingData = objectMapper.readValue(file1, Map.class);
+                Map<String, Map<String, Map<String, String>>> mappingSubData = objectMapper.readValue(file2, Map.class);
+
+                String source = mappingData.get("sourceMap").get(sourceCode);
+                earthquakeAddForm.setSource(source);
+
+                String subsource = mappingSubData.get("subsourceMap").get(sourceCode).get(subsourceCode);
+                earthquakeAddForm.setSubsource(subsource);
+
+                String carrier = mappingData.get("carrierMap").get(carrierCode);
+                earthquakeAddForm.setCarrier(carrier);
+
+                String disaster = mappingData.get("disasterMap").get(disasterCode);
+                earthquakeAddForm.setDisaster(disaster);
+
+                String subdisaster = mappingSubData.get("subdisasterMap").get(disasterCode).get(subdisasterCode);
+                earthquakeAddForm.setSubdisaster(subdisaster);
+
+                String degree = mappingSubData.get("indexMap").get(disasterCode).get(degreeCode.substring(0, 3));
+                earthquakeAddForm.setDegree(degree);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(earthquakeAddForm);
+
+
+            EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);
+
+            System.out.println(entity);
+            // 保存数据
+            entity.setDeletedFlag(Boolean.FALSE);
+            earthquakeManager.saveEarthquake(entity);
+        }
         return ResponseDTO.ok();
     }
 
@@ -236,6 +254,7 @@ public class EarthquakeService {
      */
     public ResponseDTO<List<EarthquakeVO>> queryAllEarthquake() {
         List<EarthquakeVO> earthquakeList = earthquakeDao.selectEarthquakeByDeleted(Boolean.FALSE);
+        System.out.println(earthquakeList);
         return ResponseDTO.ok(earthquakeList);
     }
 

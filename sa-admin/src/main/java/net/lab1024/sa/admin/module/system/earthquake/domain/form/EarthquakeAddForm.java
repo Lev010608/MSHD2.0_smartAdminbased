@@ -23,8 +23,8 @@ public class EarthquakeAddForm {
     private String Location;
 
     @ApiModelProperty("发生的时间")
-    @Pattern(regexp = SmartVerificationUtil.DATE_TIME, message = "时间格式不正确")
-    private String Time;
+//    @Pattern(regexp = SmartVerificationUtil.DATE_TIME, message = "时间格式不正确")
+    private String Datetime;
 
     @ApiModelProperty("数据来源大类")
     @Length(max = 50, message = "数据来源最大长度为50")
@@ -32,7 +32,7 @@ public class EarthquakeAddForm {
 
     @ApiModelProperty("数据来源子类")
     @Length(max = 50, message = "数据来源子类最大长度为50")
-    private String subSource;
+    private String Subsource;
 
     @ApiModelProperty("载体")
     @CheckEnum(value = CarrierEnum.class, message = "载体错误")
@@ -44,11 +44,11 @@ public class EarthquakeAddForm {
 
     @ApiModelProperty("灾情子类")
     @Length(max = 50, message = "灾情子类最大长度为50")
-    private String subDisaster;
+    private String Subdisaster;
 
     @ApiModelProperty("灾情指标")
     @Length(max = 20, message = "灾情指标最大长度为20")
-    private String Index;
+    private String Degree;
 
     @ApiModelProperty("备注")
     @Length(max = 200, message = "备注最大长度为200")

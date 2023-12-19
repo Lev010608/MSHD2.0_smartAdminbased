@@ -89,6 +89,7 @@ export const supportDisasterApi = {
    * @return {*}
    */
   getSupportDisasterById: (id) => {
-    return getRequest(`/support/getById/${id}`);
+    return getRequest(`/support/getB
+    yId/${id}`);
   },
 };

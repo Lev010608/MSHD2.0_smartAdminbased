@@ -40,6 +40,7 @@ export const TABLE_ID_CONST = {
   SYSTEM: {
     EMPLOYEE: systemInitTableId + 1, //员工
     MENU: systemInitTableId + 2, //菜单
+    EARTHQUAKE:systemInitTableId+3,//地震
   },
   /**
    * 支撑

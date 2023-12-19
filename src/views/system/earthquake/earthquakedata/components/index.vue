@@ -12,12 +12,12 @@
     <div class="header">
       <a-typography-title :level="5">部门人员</a-typography-title>
       <div class="query-operate">
-        <a-radio-group v-model:value="params.disabledFlag" style="margin: 8px; flex-shrink: 0" @change="queryEmployeeByKeyword(false)">
+        <a-radio-group v-model:value="params.disabledFlag" style="margin: 8px; flex-shrink: 0" @change="queryEarthquakeByKeyword(false)">
           <a-radio-button :value="undefined">全部</a-radio-button>
           <a-radio-button :value="false">启用</a-radio-button>
           <a-radio-button :value="true">禁用</a-radio-button>
         </a-radio-group>
-        <a-input-search v-model:value.trim="params.keyword" placeholder="姓名/手机号/登录账号" @search="queryEmployeeByKeyword(true)">
+        <a-input-search v-model:value.trim="params.keyword" placeholder="姓名/手机号/登录账号" @search="queryEarthquakeByKeyword(true)">
           <template #enterButton>
             <a-button style="margin-left: 8px" type="primary">
               <template #icon>
@@ -38,10 +38,10 @@
     <div class="btn-group">
       <a-button class="btn" type="primary" @click="showDrawer" v-privilege="'system:employee:add'" size="small">添加成员</a-button>
       <a-button class="btn" size="small" @click="updateEmployeeDepartment" v-privilege="'system:employee:department:update'">调整部门</a-button>
-      <a-button class="btn" size="small" @click="batchDelete" v-privilege="'system:employee:delete'">删除</a-button>
+      <a-button class="btn" size="small" @click="batchDelete" v-privilege="'system:employee:delete'">批量删除</a-button>
 
       <span class="smart-table-column-operate">
-        <TableOperator v-model="columns" :tableId="TABLE_ID_CONST.SYSTEM.EMPLOYEE" :refresh="querySupportDisaster" />
+        <TableOperator v-model="columns" :tableId="TABLE_ID_CONST.SYSTEM.EMPLOYEE" :refresh="queryEarthquake" />
       </span>
     </div>
 
@@ -53,7 +53,7 @@
         :pagination="false"
         :loading="tableLoading"
         :scroll="{ x: 1200 }"
-        row-key="employeeId"
+        row-key="earthquakeId"
         bordered
     >
       <template #bodyCell="{ text, record, index, column }">
@@ -90,14 +90,13 @@
           v-model:current="params.pageNum"
           v-model:pageSize="params.pageSize"
           :total="total"
-          @change="querySupportDisaster"
-          @showSizeChange="querySupportDisaster"
-
+          @change="queryEarthquake"
+          @showSizeChange="queryEarthquake"
           :show-total="showTableTotal"
       />
     </div>
-    <EmployeeFormModal ref="employeeFormModal" @refresh="querySupportDisaster" @show-account="showAccount" />
-    <EmployeeDepartmentFormModal ref="employeeDepartmentFormModal" @refresh="querySupportDisaster" />
+    <EmployeeFormModal ref="employeeFormModal" @refresh="queryEarthquake" @show-account="showAccount" />
+    <EmployeeDepartmentFormModal ref="employeeDepartmentFormModal" @refresh="queryEarthquake" />
     <EmployeePasswordDialog ref="employeePasswordDialog" />
   </a-card>
 </template>
@@ -106,7 +105,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { message, Modal } from 'ant-design-vue';
 import _ from 'lodash';
 import { computed, createVNode, reactive, ref, watch } from 'vue';
-import { supportDisasterApi } from '/@/api/system/supportdisaster/support_disaster-api';
+import { earthquakeApi } from '/@/api/system/earthquake/earthquake-api';
 import { PAGE_SIZE } from '/@/constants/common-const';
 import { SmartLoading } from '/@/components/framework/smart-loading';
 import EmployeeFormModal from '../employee-form-modal/index.vue';
@@ -134,8 +133,8 @@ function showAccount(accountName, passWord) {
 //字段
 const columns = ref([
   {
-    title: '统一编码',
-    dataIndex: 'id',
+    title: '震情码',
+    dataIndex: 'code',
     width: 85,
   },
   {
@@ -145,27 +144,27 @@ const columns = ref([
   },
   {
     title: '时间',
-    dataIndex: 'time',
+    dataIndex: 'datetime',
     width: 40,
   },
   {
     title: '受灾范围',
-    dataIndex: 'severely_damaged',
+    dataIndex: 'source',
     width: 100,
   },
   {
     title: '受灾程度',
-    dataIndex: 'extent',
+    dataIndex: 'subsource',
     width: 60,
   },
   {
     title: '载体',
-    dataIndex: 'description',
+    dataIndex: 'carrier',
     width: 100,
   },
   {
     title: '灾情',
-    dataIndex: 'label',
+    dataIndex: 'disaster',
     ellipsis: true,
     width: 200,
   },
@@ -176,22 +175,12 @@ const columns = ref([
   },
   {
     title: '灾情子类',
-    dataIndex: 'number',
+    dataIndex: 'subdisaster',
     width: 120,
   },
   {
-    title: '灾情子类',
-    dataIndex: 'origin',
-    width: 120,
-  },
-  {
-    title: '灾情子类',
-    dataIndex: 'carrier',
-    width: 120,
-  },
-  {
-    title: '灾情子类',
-    dataIndex: 'remark',
+    title: '灾情指标',
+    dataIndex: 'index',
     width: 120,
   },
   {
@@ -217,17 +206,16 @@ const total = ref(0);
 // 搜索重置
 function reset() {
   Object.assign(params, defaultParams);
-  querySupportDisaster();
-
+  queryEarthquake();
 }
 
 const tableLoading = ref(false);
-//查询SupportDisaster()
-async function querySupportDisaster() {
+// 查询
+async function queryEarthquake() {
   tableLoading.value = true;
   try {
     // params.Id = props.departmentId;
-    let res = await supportDisasterApi.querySupportDisaster(params);
+    let res = await earthquakeApi.queryEarthquake(params);
     for (const item of res.data.list) {
       item.roleNameList = _.join(item.roleNameList,',');
     }
@@ -243,14 +231,13 @@ async function querySupportDisaster() {
   }
 }
 
-
 // 根据关键字 查询
 async function querySByKeyword(allDepartment) {
   tableLoading.value = true;
   try {
     params.pageNum = 1;
     params.departmentId = allDepartment ? undefined : props.departmentId;
-    let res = await employeeApi.queryEmployee(params);
+    let res = await earthquakeApi.queryEarthquake(params);
     tableData.value = res.data.list;
     total.value = res.data.total;
     // 清除选中
@@ -268,7 +255,7 @@ watch(
     () => {
       if (props.departmentId !== params.departmentId) {
         params.pageNum = 1;
-        querySupportDisaster();
+        queryEarthquake();
       }
     },
     { immediate: true }
@@ -303,9 +290,9 @@ function batchDelete() {
     async onOk() {
       SmartLoading.show();
       try {
-        await employeeApi.batchDeleteEmployee(employeeIdArray);
+        await earthquakeApi.batchDeleteEmployee(employeeIdArray);
         message.success('删除成功');
-        queryEmployee();
+        queryEarthquake();
         selectedRowKeys.value = [];
         selectedRows.value = [];
       } catch (error) {
@@ -327,7 +314,7 @@ function updateEmployeeDepartment() {
     message.warning('请选择要调整部门的员工');
     return;
   }
-  const employeeIdArray = selectedRows.value.map((e) => e.employeeId);
+  const employeeIdArray = selectedRows.value.map((e) => e.earthquakeId);
   employeeDepartmentFormModal.value.showModal(employeeIdArray);
 }
 

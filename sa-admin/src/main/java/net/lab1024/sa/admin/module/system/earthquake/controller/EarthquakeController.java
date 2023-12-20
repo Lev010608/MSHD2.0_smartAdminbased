@@ -14,6 +14,7 @@ import net.lab1024.sa.common.common.domain.PageResult;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.module.support.operatelog.annoation.OperateLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,9 +68,8 @@ public class EarthquakeController extends AdminBaseController {
     @ApiOperation(value = "批量增加员工 @author 卓大")
     @PostMapping("/earthquake/update/batch/add")
 //    @PreAuthorize("@saAuth.checkPermission('system:employee:delete')")
-    public ResponseDTO<String> batchAdd(@RequestParam String fileKey, HttpServletRequest request, @RequestParam(required = false, defaultValue = "sheet1") String sheetName) {
-        String userAgent = ServletUtil.getHeaderIgnoreCase(request, RequestHeaderConst.USER_AGENT);
-        return earthquakeService.batchAddEarthquake(fileKey, sheetName, userAgent);
+    public ResponseDTO<String> batchAdd(@RequestParam String fileKey, @RequestParam(required = false, defaultValue = "sheet1") String sheetName) {
+        return earthquakeService.batchAddEarthquake(fileKey, sheetName);
     }
 
     @ApiOperation("查询所有震情信息 @author 卓大")

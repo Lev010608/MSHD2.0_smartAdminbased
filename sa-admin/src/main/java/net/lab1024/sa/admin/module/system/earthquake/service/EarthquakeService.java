@@ -15,6 +15,8 @@ import net.lab1024.sa.common.common.domain.PageResult;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.SmartBeanUtil;
 import net.lab1024.sa.common.common.util.SmartPageUtil;
+import net.lab1024.sa.common.module.support.file.dao.FileDao;
+import net.lab1024.sa.common.module.support.file.domain.vo.FileVO;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,6 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -41,6 +46,9 @@ public class EarthquakeService {
 
     @Value("${file.storage.local.path}")
     private String localPath;
+
+    @Autowired
+    private FileDao fileDao;
 
     @Autowired
     private EarthquakeDao earthquakeDao;
@@ -97,7 +105,7 @@ public class EarthquakeService {
         }
         ExcelImport excelImport = null;
         try {
-            JSONObject check = excelImport.readUsersExcel(filePath, sheetName,String userAgent);
+            JSONObject check = excelImport.readUsersExcel(filePath, sheetName);
             // 获取 "sheet1" 对应的 JSONArray
             JSONArray sheet1Array = check.getJSONArray("sheet1");
             // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值

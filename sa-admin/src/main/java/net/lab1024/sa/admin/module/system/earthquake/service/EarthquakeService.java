@@ -180,7 +180,7 @@ public class EarthquakeService {
                 String subdisaster = mappingSubData.get("subdisasterMap").get(disasterCode).get(subdisasterCode);
                 earthquakeAddForm.setSubdisaster(subdisaster);
 
-                String degree = mappingSubData.get("indexMap").get(disasterCode).get(degreeCode.substring(0, 3));
+                String degree = mappingSubData.get("degreeMap").get(disasterCode).get(degreeCode.substring(0, 3));
                 earthquakeAddForm.setDegree(degree);
 
             } catch (Exception e) {

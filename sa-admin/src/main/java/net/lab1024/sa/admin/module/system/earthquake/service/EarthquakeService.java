@@ -15,6 +15,8 @@ import net.lab1024.sa.common.common.domain.PageResult;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.SmartBeanUtil;
 import net.lab1024.sa.common.common.util.SmartPageUtil;
+import net.lab1024.sa.common.module.support.file.dao.FileDao;
+import net.lab1024.sa.common.module.support.file.domain.vo.FileVO;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,6 +25,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -37,6 +43,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class EarthquakeService {
+
+    @Value("${file.storage.local.path}")
+    private String localPath;
+
+    @Autowired
+    private FileDao fileDao;
 
     @Autowired
     private EarthquakeDao earthquakeDao;
@@ -77,32 +89,39 @@ public class EarthquakeService {
         PageResult<EarthquakeVO> PageResult = SmartPageUtil.convert2PageResult(pageParam, earthquakeList);
         return ResponseDTO.ok(PageResult);
     }
+
     /**
      * 批量新增震情
      */
-    public synchronized ResponseDTO<String> batchAddEarthquake(String fileName,String sheetName) throws JSONException, IOException {
-        Path path = Paths.get(fileName);
+    public synchronized ResponseDTO<String> batchAddEarthquake(String fileKey, String sheetName) {
+        System.out.println(fileKey);
+        String filePath = localPath + fileKey;
+        System.out.println(filePath);
+        Path path = Paths.get(filePath);
         if (Files.exists(path)) {
             System.out.println("File exists!");
         } else {
             System.out.println("File does not exist!");
         }
-        ExcelImport excelImport = new ExcelImport();
-        JSONObject check = excelImport.readUsersExcel(fileName,sheetName);
-
-        // 获取 "sheet1" 对应的 JSONArray
-        JSONArray sheet1Array = check.getJSONArray("sheet1");
-
-        // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
-        for (int i = 0; i < sheet1Array.length(); i++) {
-            JSONObject item = sheet1Array.getJSONObject(i);
-            String code = item.getString("code");
-            EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
-            earthquakeAddForm.setCode(code);
-            addEarthquake(earthquakeAddForm);
+        ExcelImport excelImport = null;
+        try {
+            JSONObject check = excelImport.readUsersExcel(filePath, sheetName);
+            // 获取 "sheet1" 对应的 JSONArray
+            JSONArray sheet1Array = check.getJSONArray("sheet1");
+            // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
+            for (int i = 0; i < sheet1Array.length(); i++) {
+                JSONObject item = sheet1Array.getJSONObject(i);
+                String code = item.getString("code");
+                EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
+                earthquakeAddForm.setCode(code);
+                addEarthquake(earthquakeAddForm);
+            }
+        } catch (IOException | JSONException Exception) {
+            Exception.printStackTrace();
         }
         return ResponseDTO.ok();
     }
+
     /**
      * 新增震情
      *
@@ -112,11 +131,10 @@ public class EarthquakeService {
     public synchronized ResponseDTO<String> addEarthquake(EarthquakeAddForm earthquakeAddForm) {
         // 校验名称是否重复
         EarthquakeEntity earthquakeEntity = earthquakeDao.getByCode(earthquakeAddForm.getCode());
-        if (null != earthquakeEntity){
+        if (null != earthquakeEntity) {
             if (!earthquakeEntity.getDeletedFlag()) {
                 return ResponseDTO.userErrorParam("震情码重复");
-           }
-            else{
+            } else {
                 EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);
 
                 System.out.println(entity);
@@ -124,8 +142,7 @@ public class EarthquakeService {
                 entity.setDeletedFlag(Boolean.FALSE);
                 earthquakeManager.updateById(entity);
             }
-        }
-        else {
+        } else {
             String code = earthquakeAddForm.getCode();
             String geoCode = code.substring(0, 12);
             String time = code.substring(12, 26);
@@ -178,7 +195,7 @@ public class EarthquakeService {
                 String subdisaster = mappingSubData.get("subdisasterMap").get(disasterCode).get(subdisasterCode);
                 earthquakeAddForm.setSubdisaster(subdisaster);
 
-                String degree = mappingSubData.get("indexMap").get(disasterCode).get(degreeCode.substring(0, 3));
+                String degree = mappingSubData.get("degreeMap").get(disasterCode).get(degreeCode.substring(0, 3));
                 earthquakeAddForm.setDegree(degree);
 
             } catch (Exception e) {

@@ -60,11 +60,14 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
         String newFileName = this.generateFileName(originalFileName);
         //生成文件key
         String fileKey = path + newFileName;
+//        String fileKey = path + originalFileName;
         //创建文件
+//        File fileTemp = new File(new File(filePath + originalFileName).getAbsolutePath());
         File fileTemp = new File(new File(filePath + newFileName).getAbsolutePath());
         try {
             multipartFile.transferTo(fileTemp);
             fileUploadVO.setFileUrl(this.generateFileUrl(fileKey));
+//            fileUploadVO.setFileName(originalFileName);
             fileUploadVO.setFileName(newFileName);
             fileUploadVO.setFileKey(fileKey);
             fileUploadVO.setFileSize(multipartFile.getSize());
@@ -111,7 +114,9 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
      */
     @Override
     public ResponseDTO<FileDownloadVO> fileDownload(String fileKey) {
+        System.out.println(fileKey);
         String filePath = localPath + fileKey;
+        System.out.println(filePath);
         File localFile = new File(filePath);
         InputStream in = null;
         try {

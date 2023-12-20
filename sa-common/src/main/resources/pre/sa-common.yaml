@@ -77,9 +77,9 @@ logging:
 # 文件上传 配置
 file:
   storage:
-    mode: cloud
+    mode: local
     local:
-      path: ${localPath:/home}/smart_admin_v2/upload/
+      path: ${localPath:/home}/MSHD2.0_vue/upload/
     cloud:
       region: oss-cn-qingdao
       endpoint: oss-cn-qingdao.aliyuncs.com

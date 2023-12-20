@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -37,6 +38,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class EarthquakeService {
+
+    @Value("${file.storage.local.path}")
+    private String localPath;
 
     @Autowired
     private EarthquakeDao earthquakeDao;
@@ -81,8 +85,11 @@ public class EarthquakeService {
     /**
      * 批量新增震情
      */
-    public synchronized ResponseDTO<String> batchAddEarthquake(String fileName, String sheetName) {
-        Path path = Paths.get(fileName);
+    public synchronized ResponseDTO<String> batchAddEarthquake(String fileKey, String sheetName) {
+        System.out.println(fileKey);
+        String filePath = localPath + fileKey;
+        System.out.println(filePath);
+        Path path = Paths.get(filePath);
         if (Files.exists(path)) {
             System.out.println("File exists!");
         } else {
@@ -90,7 +97,7 @@ public class EarthquakeService {
         }
         ExcelImport excelImport = null;
         try {
-            JSONObject check = excelImport.readUsersExcel(fileName, sheetName);
+            JSONObject check = excelImport.readUsersExcel(filePath, sheetName,String userAgent);
             // 获取 "sheet1" 对应的 JSONArray
             JSONArray sheet1Array = check.getJSONArray("sheet1");
             // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值

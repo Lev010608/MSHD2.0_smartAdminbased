@@ -114,11 +114,16 @@ public class EarthquakeService {
             // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
             for (int i = 0; i < sheet1Array.length(); i++) {
                 JSONObject item = sheet1Array.getJSONObject(i);
-                String code = item.getString("code");
-                EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
-                System.out.println(code);
-                //earthquakeAddForm.setCode(code);
-                //addEarthquake(earthquakeAddForm);
+                if (item.has("code")){
+                    String code = item.getString("code");
+                    EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
+                    System.out.println(code);
+                    earthquakeAddForm.setCode(code);
+                    System.out.println(earthquakeAddForm);
+                    //addEarthquake(earthquakeAddForm);
+                }
+                else
+                    break;
             }
         } catch (IOException | JSONException Exception) {
             Exception.printStackTrace();

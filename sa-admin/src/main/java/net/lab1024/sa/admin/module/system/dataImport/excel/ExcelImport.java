@@ -43,10 +43,11 @@ public class ExcelImport {
     // 处理行
     private JSONArray processRows(XSSFSheet sheet, JSONArray headerArray) throws JSONException {
         JSONArray jsonArray = new JSONArray();
+        int numberOfCells = headerArray.length(); // 保存列数
         for (int rowNum = 1; rowNum < sheet.getPhysicalNumberOfRows(); rowNum++) {
             XSSFRow row = sheet.getRow(rowNum);
             JSONObject rowObject = new JSONObject();
-            for (int cellNum = 0; cellNum < row.getPhysicalNumberOfCells(); cellNum++) {
+            for (int cellNum = 0; cellNum < numberOfCells; cellNum++) { // 使用保存的列数
                 if (row.getCell(cellNum) != null) {
                     String columnName = headerArray.getString(cellNum);
                     String cellValue = getCellValueAsString(row.getCell(cellNum));

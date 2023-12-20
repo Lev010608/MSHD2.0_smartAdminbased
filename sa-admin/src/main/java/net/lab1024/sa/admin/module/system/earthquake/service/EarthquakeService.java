@@ -93,8 +93,10 @@ public class EarthquakeService {
     /**
      * 批量新增震情
      */
-    public synchronized ResponseDTO<String> batchAddEarthquake(String fileKey, String sheetName) {
+    public synchronized ResponseDTO<String> batchAddEarthquake(String fileKey) {
         System.out.println(fileKey);
+        String tempString =fileKey.replaceAll("%2F", "/");
+        fileKey=tempString.replaceAll("=$", "");
         String filePath = localPath + fileKey;
         System.out.println(filePath);
         Path path = Paths.get(filePath);
@@ -105,16 +107,18 @@ public class EarthquakeService {
         }
         ExcelImport excelImport = new ExcelImport();
         try {
-            JSONObject check = excelImport.readUsersExcel(filePath, sheetName);
+            JSONObject check = excelImport.readUsersExcel(filePath, "sheet1");
             // 获取 "sheet1" 对应的 JSONArray
             JSONArray sheet1Array = check.getJSONArray("sheet1");
+            System.out.println(sheet1Array);
             // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
             for (int i = 0; i < sheet1Array.length(); i++) {
                 JSONObject item = sheet1Array.getJSONObject(i);
                 String code = item.getString("code");
                 EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
-                earthquakeAddForm.setCode(code);
-                addEarthquake(earthquakeAddForm);
+                System.out.println(code);
+                //earthquakeAddForm.setCode(code);
+                //addEarthquake(earthquakeAddForm);
             }
         } catch (IOException | JSONException Exception) {
             Exception.printStackTrace();

@@ -61,6 +61,13 @@ public class EarthquakeController extends AdminBaseController {
         return earthquakeService.batchUpdateDeleteFlag(earthquakeCodeList);
     }
 
+    @ApiOperation(value = "批量增加员工 @author 卓大")
+    @PostMapping("/earthquake/update/batch/add")
+//    @PreAuthorize("@saAuth.checkPermission('system:employee:delete')")
+    public ResponseDTO<String> batchAdd(@RequestBody String filename, @RequestParam(required = false, defaultValue = "sheet1") String sheetName) {
+        return earthquakeService.batchAddEarthquake(filename, sheetName);
+    }
+
     @ApiOperation("查询所有震情信息 @author 卓大")
     @GetMapping("/earthquake/queryAll")
     public ResponseDTO<List<EarthquakeVO>> queryAllEarthquake() {

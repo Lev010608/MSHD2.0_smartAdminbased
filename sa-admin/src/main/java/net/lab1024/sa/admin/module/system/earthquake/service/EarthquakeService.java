@@ -77,10 +77,11 @@ public class EarthquakeService {
         PageResult<EarthquakeVO> PageResult = SmartPageUtil.convert2PageResult(pageParam, earthquakeList);
         return ResponseDTO.ok(PageResult);
     }
+
     /**
      * 批量新增震情
      */
-    public synchronized ResponseDTO<String> batchAddEarthquake(String fileName,String sheetName) throws JSONException, IOException {
+    public synchronized ResponseDTO<String> batchAddEarthquake(String fileName, String sheetName) {
         Path path = Paths.get(fileName);
         if (Files.exists(path)) {
             System.out.println("File exists!");
@@ -88,21 +89,24 @@ public class EarthquakeService {
             System.out.println("File does not exist!");
         }
         ExcelImport excelImport = null;
-        JSONObject check = excelImport.readUsersExcel("C:\\Users\\Note\\Desktop\\test.xlsx","sheet1");
-
-        // 获取 "sheet1" 对应的 JSONArray
-        JSONArray sheet1Array = check.getJSONArray("sheet1");
-
-        // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
-        for (int i = 0; i < sheet1Array.length(); i++) {
-            JSONObject item = sheet1Array.getJSONObject(i);
-            String code = item.getString("code");
-            EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
-            earthquakeAddForm.setCode(code);
-            addEarthquake(earthquakeAddForm);
+        try {
+            JSONObject check = excelImport.readUsersExcel(fileName, sheetName);
+            // 获取 "sheet1" 对应的 JSONArray
+            JSONArray sheet1Array = check.getJSONArray("sheet1");
+            // 遍历 JSONArray 中的每个 JSONObject，获取 "test" 值
+            for (int i = 0; i < sheet1Array.length(); i++) {
+                JSONObject item = sheet1Array.getJSONObject(i);
+                String code = item.getString("code");
+                EarthquakeAddForm earthquakeAddForm = new EarthquakeAddForm();
+                earthquakeAddForm.setCode(code);
+                addEarthquake(earthquakeAddForm);
+            }
+        } catch (IOException | JSONException Exception) {
+            Exception.printStackTrace();
         }
         return ResponseDTO.ok();
     }
+
     /**
      * 新增震情
      *
@@ -112,11 +116,10 @@ public class EarthquakeService {
     public synchronized ResponseDTO<String> addEarthquake(EarthquakeAddForm earthquakeAddForm) {
         // 校验名称是否重复
         EarthquakeEntity earthquakeEntity = earthquakeDao.getByCode(earthquakeAddForm.getCode());
-        if (null != earthquakeEntity){
+        if (null != earthquakeEntity) {
             if (!earthquakeEntity.getDeletedFlag()) {
                 return ResponseDTO.userErrorParam("震情码重复");
-           }
-            else{
+            } else {
                 EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);
 
                 System.out.println(entity);
@@ -124,8 +127,7 @@ public class EarthquakeService {
                 entity.setDeletedFlag(Boolean.FALSE);
                 earthquakeManager.updateById(entity);
             }
-        }
-        else {
+        } else {
             String code = earthquakeAddForm.getCode();
             String geoCode = code.substring(0, 12);
             String time = code.substring(12, 26);

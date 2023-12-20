@@ -87,8 +87,8 @@ public class EarthquakeService {
         } else {
             System.out.println("File does not exist!");
         }
-        ExcelImport excelImport = null;
-        JSONObject check = excelImport.readUsersExcel("C:\\Users\\Note\\Desktop\\test.xlsx","sheet1");
+        ExcelImport excelImport = new ExcelImport();
+        JSONObject check = excelImport.readUsersExcel(fileName,sheetName);
 
         // 获取 "sheet1" 对应的 JSONArray
         JSONArray sheet1Array = check.getJSONArray("sheet1");

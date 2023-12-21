@@ -150,7 +150,7 @@ public class EarthquakeService {
                 System.out.println(entity);
                 // 保存数据
                 entity.setDeletedFlag(Boolean.FALSE);
-                earthquakeManager.updateById(entity);
+                earthquakeManager.updateEarthquake(entity);
             }
         } else {
             String code = earthquakeAddForm.getCode();

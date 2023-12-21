@@ -60,7 +60,7 @@
 
 
     <select id="getEarthquakeByCode" resultType="net.lab1024.sa.admin.module.system.earthquake.domain.vo.EarthquakeVO">
-        SELECT t_earthquake.*,
+        SELECT t_earthquake.*
         FROM t_earthquake
         where t_earthquake.code = #{code}
     </select>
@@ -68,7 +68,7 @@
     <select id="selectEarthquakeByDeleted"
             resultType="net.lab1024.sa.admin.module.system.earthquake.domain.vo.EarthquakeVO">
         SELECT
-        t_earthquake.*,
+        t_earthquake.*
         FROM t_earthquake
         <where>
             <if test="deletedFlag != null">

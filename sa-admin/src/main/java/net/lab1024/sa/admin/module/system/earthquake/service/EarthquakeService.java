@@ -120,7 +120,7 @@ public class EarthquakeService {
                     System.out.println(code);
                     earthquakeAddForm.setCode(code);
                     System.out.println(earthquakeAddForm);
-                    //addEarthquake(earthquakeAddForm);
+                    addEarthquake(earthquakeAddForm);
                 }
                 else
                     break;
@@ -139,9 +139,10 @@ public class EarthquakeService {
      */
     public synchronized ResponseDTO<String> addEarthquake(EarthquakeAddForm earthquakeAddForm) {
         // 校验名称是否重复
-        EarthquakeEntity earthquakeEntity = earthquakeDao.getByCode(earthquakeAddForm.getCode());
+        EarthquakeEntity earthquakeEntity = earthquakeDao.selectById(earthquakeAddForm.getCode());
+        System.out.println(earthquakeEntity);
         if (null != earthquakeEntity) {
-            if (!earthquakeEntity.getDeletedFlag()) {
+            if (earthquakeEntity.getDeletedFlag() == Boolean.FALSE) {
                 return ResponseDTO.userErrorParam("震情码重复");
             } else {
                 EarthquakeEntity entity = SmartBeanUtil.copy(earthquakeAddForm, EarthquakeEntity.class);

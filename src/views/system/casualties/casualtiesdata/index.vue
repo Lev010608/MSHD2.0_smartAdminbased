@@ -15,9 +15,9 @@
       </a-col> -->
 
       <a-col :span="25" class="height100">
-        <div class="employee-box height100">
+        <div class="earthquake-box height100">
           <!-- <DepartmentChildren style="flex-grow: 1" :breadcrumb="breadcrumb" :selectedDepartmentChildren="selectedDepartmentChildren" /> -->
-          <EmployeeList style="flex-grow: 2.5" class="employee" :departmentId="selectedDepartmentId" />
+          <EarthquakeList style="flex-grow: 2.5" class="earthquake" :departmentId="selectedDepartmentId" />
         </div>
       </a-col>
     </a-row>
@@ -26,9 +26,9 @@
 <script setup>
 import _ from 'lodash';
 import { computed, ref } from 'vue';
-import DepartmentChildren from '/@/views/system/employee1/department1/components/earthquake-children/index.vue';
-import DepartmentTree from '/@/views/system/employee1/department1/components/earthquake-tree/index.vue';
-import EmployeeList from './components/earthquake-list/index.vue';
+import DepartmentChildren from './components/department-children/index.vue';
+import DepartmentTree from './components/department-tree/index.vue';
+import EarthquakeList from './components/earthquake-list/index.vue';
 
 const departmentTree = ref();
 
@@ -61,7 +61,7 @@ const selectedDepartmentId = computed(() => {
 .height100 {
   height: 100%;
 }
-.employee-box {
+.earthquake-box {
   display: flex;
   flex-direction: column;
 

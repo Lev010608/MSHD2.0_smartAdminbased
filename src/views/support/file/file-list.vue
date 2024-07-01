@@ -73,7 +73,7 @@
         </template>
         <template v-if="column.dataIndex === 'action'">
           <div class="smart-table-operate">
-            <a-button @click="view(record)" type="link">查看</a-button>
+            <a-button @click="decode(record)" type="link">解码</a-button>
             <a-button @click="download(record)" type="link">下载</a-button>
           </div>
         </template>
@@ -110,10 +110,16 @@
       />
     </a-modal>
   </a-card>
+
+<!--  确认解码成功-->
+  <a-modal v-model:visible="decodeSuccessModalVisible" title="解码成功" @ok="hideDecodeSuccessModal" ok-only>
+    <p>解码成功！</p>
+  </a-modal>
 </template>
 <script setup>
   import { onMounted, reactive, ref } from 'vue';
   import { fileApi } from '/@/api/support/file/file-api';
+  import{earthquakeApi} from '/@/api/system/earthquake/earthquake-api';
   import SmartEnumSelect from '/@/components/framework/smart-enum-select/index.vue';
   import TableOperator from '/@/components/support/table-operator/index.vue';
   import { PAGE_SIZE_OPTIONS } from '/@/constants/common-const';
@@ -122,6 +128,7 @@
   import FilePreviewModal from '/@/components/support/file-preview-modal/index.vue';
   import FileUpload from '/@/components/support/file-upload/index.vue';
   import { FILE_FOLDER_TYPE_ENUM } from '/@/constants/support/file-const';
+  import {Modal} from "ant-design-vue";
   // ---------------------------- 表格列 ----------------------------
 
   const columns = ref([
@@ -249,11 +256,46 @@
     return (size / Math.pow(num, 4)).toFixed(2) + 'T'; //T
   }
 
-  // 查看文件
+  // 解码成功弹窗状态
+  const decodeSuccessModalVisible = ref(false);
+
+  // 解码文件
   const filePreviewModalRef = ref();
-  function view(file) {
-    filePreviewModalRef.value.showPreview(file);
+  async function decode(file) {
+    try {
+      //添加条件判断
+      if (file.fileType === 'xlsx') {
+        //解码操作
+        await earthquakeApi.batchAddEarthquake(file.fileKey);
+        //显示弹窗
+        decodeSuccessModalVisible.value = true;
+      }else {
+        // 文件类型不为xlsx，弹出提示框
+        showUnsupportedFileTypeModal();
+      }
+    }catch (error){
+      console.error('解码失败', error);
+    }
+    //filePreviewModalRef.value.showPreview(file);
   }
+  // 隐藏解码成功弹窗
+  function hideDecodeSuccessModal() {
+    decodeSuccessModalVisible.value = false;
+  }
+
+  // 显示文件类型不支持解码的弹窗
+  function showUnsupportedFileTypeModal() {
+    // 使用 a-modal 组件显示提示信息
+    const modal = Modal.info({
+      title: '提示',
+      content: '该文件类型不支持解码',
+      onOk: () => {
+        modal.destroy(); // 销毁 modal 对象
+      },
+    });
+  }
+
+
 
   // 下载文件
   async function download(file) {

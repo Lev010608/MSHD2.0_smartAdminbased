@@ -11,11 +11,15 @@
 <template>
   <div class="user-header">
     <a-page-header :title="welcomeSentence" :sub-title="departmentName" >
-    
+      <template #extra>
+<!--        <p>{{ dayInfo }}</p>-->
+        <!-- Add the button for "震情可视化" -->
+        <a-button type="primary" @click="redirectToVisualization">震情可视化</a-button>
+      </template>
       <!-- <template #tags>
         <a-tag color="blue">努力工作</a-tag>
         <a-tag color="success">主动 / 皮实 / 可靠 </a-tag>
-        
+
         <a-tag color="error">自省 / 精进 / 创新</a-tag>
       </template> -->
    
@@ -55,6 +59,11 @@
   const userStore = useUserStore();
 
   const departmentName = computed(() => useUserStore.departmentName);
+
+  const redirectToVisualization = () => {
+    // 跳转到指定的URL
+    window.location.href = 'http://60.205.141.23:1234/';
+  };
 
   // 欢迎语
   const welcomeSentence = computed(() => {

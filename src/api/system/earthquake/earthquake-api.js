@@ -12,7 +12,7 @@ import { getRequest, postRequest } from '/@/lib/axios';
 
 export const earthquakeApi = {
   /**
-   * @description: 查询所有震情 @author 卓大
+   * @description: 查询所有震情 @author Lev
    * @param {*}
    * @return {*}
    */
@@ -60,6 +60,14 @@ export const earthquakeApi = {
    */
   batchDeleteEarthquake: (earthquakeCodeList) => {
     return postRequest('/earthquake/update/batch/delete', earthquakeCodeList);
+  },
+  /**
+   * @description: 批量添加震情
+   * @param {number} earthquakeIdList
+   * @return {*}
+   */
+  batchAddEarthquake:(fileKey)=>{
+    return postRequest('/earthquake/batch/add',   fileKey );
   },
   /**
    * @description: 批量调整员工部门/震情的？

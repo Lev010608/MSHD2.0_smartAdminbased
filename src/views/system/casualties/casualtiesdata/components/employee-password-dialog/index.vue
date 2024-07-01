@@ -18,7 +18,7 @@
       <a-button
         type="primary"
         class="account-copy"
-        :data-clipboard-text="`登录名：${showLoginName} 
+        :data-clipboard-text="`登录名：${showLoginName}
 密码：${showLoginPassword}`"
         size="middle"
         @click="copy"

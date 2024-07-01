@@ -1,5 +1,5 @@
 <template>
-  <default-home-card icon="PieChartTwoTone" title="气候雷达状态">
+  <default-home-card icon="PieChartTwoTone" title="震情信息">
     <div class="echarts-box">
       <div class="pie-main" id="pie-main"></div>
     </div>
@@ -9,10 +9,12 @@
 import DefaultHomeCard from "/@/views/system/home/components/default-home-card.vue";
 import * as echarts from 'echarts';
 import {onMounted} from "vue";
+import { earthquakeApi } from '/@/api/system/earthquake/earthquake-api';
 
 onMounted(() => {
   init();
 });
+
 
 function init(){
   let option = {
@@ -20,12 +22,12 @@ function init(){
       trigger: 'item'
     },
     legend: {
-      top: '5%',
+      top: '1%',
       left: 'center'
     },
     series: [
       {
-        name: '台数',
+        name: '数量',
         type: 'pie',
         radius: ['40%', '70%'],
         avoidLabelOverlap: false,
@@ -49,10 +51,10 @@ function init(){
           show: false
         },
         data: [
-          { value: 27, name: '关机' },
-          { value: 152, name: '工作' },
-          { value: 72, name: '报警' },
-          { value: 54, name: '故障' },
+          { value: 27, name: '人员伤亡与失踪' },
+          { value: 152, name: '房屋破坏' },
+          { value: 72, name: '生命线工程' },
+          { value: 54, name: '次生灾害' },
         ]
       }
     ]

@@ -1,5 +1,5 @@
 <template>
-  <default-home-card icon="FundTwoTone" title="故障类型分布">
+  <default-home-card icon="FundTwoTone" title="灾情类型分布">
     <div class="echarts-box">
       <div class="gradient-main" id="gradient-main"></div>
     </div>
@@ -9,6 +9,7 @@
 import DefaultHomeCard from "/@/views/system/home/components/default-home-card.vue";
 import * as echarts from 'echarts';
 import {onMounted} from "vue";
+import { earthquakeApi } from '/@/api/system/earthquake/earthquake-api';
 
 onMounted(() => {
   init();
@@ -16,7 +17,7 @@ onMounted(() => {
 
 function init(){
   let option = {
-    color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+    color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087'],
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -27,7 +28,7 @@ function init(){
       }
     },
     legend: {
-      data: ['缺少试剂', '传感器离线', '电路故障', '数据溢出', '未解析']
+      data: ['人员伤亡及失踪', '房屋破坏', '生命工程灾情', '次生灾害']
     },
     grid: {
       left: '3%',
@@ -49,7 +50,7 @@ function init(){
     ],
     series: [
       {
-        name: '缺少试剂',
+        name: '人员伤亡及失踪',
         type: 'line',
         stack: 'Total',
         smooth: true,
@@ -76,7 +77,7 @@ function init(){
         data: [140, 232, 101, 264, 90, 340, 250]
       },
       {
-        name: '传感器离线',
+        name: '房屋破坏',
         type: 'line',
         stack: 'Total',
         smooth: true,
@@ -103,7 +104,7 @@ function init(){
         data: [120, 282, 111, 234, 220, 340, 310]
       },
       {
-        name: '电路故障',
+        name: '生命工程灾情',
         type: 'line',
         stack: 'Total',
         smooth: true,
@@ -130,7 +131,7 @@ function init(){
         data: [320, 132, 201, 334, 190, 130, 220]
       },
       {
-        name: '数据溢出',
+        name: '次生灾害',
         type: 'line',
         stack: 'Total',
         smooth: true,
